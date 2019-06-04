@@ -1,3 +1,10 @@
 <resources>
 	<string name="app_name">MyMusicPlayer</string>
+
+	<string name="tab_recommend">推荐</string>
+	<string name="tab_song_list">歌单</string>
+	<string name="tab_love">收藏</string>
+	<string name="tab_history">历史</string>
+
+
 </resources>
