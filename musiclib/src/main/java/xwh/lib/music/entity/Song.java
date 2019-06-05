@@ -10,4 +10,9 @@ public class Song {
 	public int duration;
 	public String cover;
 	public String url;
+
+	@Override
+	public String toString() {
+		return this.name;
+	}
 }

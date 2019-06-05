@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -44,6 +45,7 @@ public class SongListFragment extends BaseFragment {
 		mAdapter = new SongListAdapter(mContext);
 		mRecyclerView.setAdapter(mAdapter);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+		mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
 	}
 
 	private void initData() {

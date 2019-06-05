@@ -37,6 +37,7 @@ dependencies {
     implementation rootProject.ext.butterknife.butterknife
     annotationProcessor rootProject.ext.butterknife.compiler
     implementation project(path: ':musiclib')
+    implementation project(path: ':viewlib')
 
 
 }

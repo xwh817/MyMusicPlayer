@@ -15,8 +15,8 @@ import xwh.lib.music.entity.Song;
  * Created by xwh on 2019/6/4.
  */
 public class SongAPI {
-	//private static final String mBaseUrl = "http://music.turingmao.com/";
-	private static final String mBaseUrl = "http://172.16.45.58:20195/";
+	private static final String mBaseUrl = "http://music.turingmao.com/";
+	//private static final String mBaseUrl = "http://172.16.45.58:20195/";
 	private Retrofit mRetrofit;
 
 	private static SongAPI mInstance;
