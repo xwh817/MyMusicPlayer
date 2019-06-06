@@ -1,9 +1,6 @@
 package xwh.lib.music.player;
 
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.media.MediaPlayer.OnErrorListener;
-import android.media.MediaPlayer.OnPreparedListener;
 import android.os.CountDownTimer;
 import android.util.Log;
 
@@ -21,7 +18,6 @@ public class MusicManager {
 	private int currentIndex;
 	private Song currentSong;
 	private int errorCount;
-	private boolean isPausedByUser;
 
 	public static synchronized MusicManager getInstance() {
 		if (instance == null) {
@@ -32,32 +28,24 @@ public class MusicManager {
 
 	public void start(final String path) {
 		try {
-			if(mPlayer ==null){
+			if (mPlayer == null) {
 				mPlayer = new MediaPlayer();
-				mPlayer.setOnPreparedListener(new OnPreparedListener() {
-					@Override
-					public void onPrepared(MediaPlayer mp) {
-						Log.d(TAG, "onPrepared:" + mp.getDuration());
-						mPlayer.start();
+				mPlayer.setOnPreparedListener(mp -> {
+					Log.d(TAG, "onPrepared:" + mp.getDuration());
+					mPlayer.start();
 
-						if (path.startsWith("http") && mp.getDuration() > 0 && mp.getDuration() < 60*60*1000) { // 可能播放失败之后也回调，而且返回一个很大的值1675999624 1676085640
-							errorCount = 0;
-						}
+					if (mp.getDuration() > 0 && mp.getDuration() < 60 * 60 * 1000) { // 可能播放失败之后也回调，而且返回一个很大的值1675999624 1676085640
+						errorCount = 0;
 					}
 				});
-				mPlayer.setOnCompletionListener(new OnCompletionListener() {
-					@Override
-					public void onCompletion(MediaPlayer mp) {
+				mPlayer.setOnCompletionListener(mp -> {
 						Log.d(TAG, "onCompletion:" + mp.getDuration());
 						// 播放完成后自动下一首
-						if (mp.getDuration() > 0 && mp.getDuration() < 60*60*1000) { // 可能播放失败之后也回调，而且返回一个很大的值1675999624 1676085640
+						if (mp.getDuration() > 0 && mp.getDuration() < 60 * 60 * 1000) { // 可能播放失败之后也回调，而且返回一个很大的值1675999624 1676085640
 							next();
 						}
-					}
 				});
-				mPlayer.setOnErrorListener(new OnErrorListener() {
-					@Override
-					public boolean onError(MediaPlayer mp, int what, int extra) {
+				mPlayer.setOnErrorListener((MediaPlayer mp, int what, int extra) -> {
 						Log.e(TAG, "onError:" + what + ", " + extra + ", " + errorCount);
 						if (what == 1 && extra == -2147483648) {
 							errorCount++;
@@ -80,13 +68,12 @@ public class MusicManager {
 
 						mp.reset();
 						return false;
-					}
 				});
 			} else {
 				mPlayer.reset();
 			}
 
-			Log.d(TAG, "start play: "+ path);
+			Log.d(TAG, "start play: " + path);
 
 			mPlayer.setDataSource(path);
 			mPlayer.prepareAsync();
@@ -95,16 +82,9 @@ public class MusicManager {
 		}
 	}
 
-	public void load(Song song){
-		currentSong = song;
-		if (mMusicListener != null) {
-			mMusicListener.onPlay();
-		}
-	}
 
-	public void start(Song song){
+	public void start(Song song) {
 		currentSong = song;
-		isPausedByUser = false;
 		/*// 先从缓存取
 		String localPath = FileCache.getSongFromCache(currentSong.id);
 
@@ -118,7 +98,7 @@ public class MusicManager {
 		}*/
 
 		start(currentSong.url);
-		
+
 		if (mMusicListener != null) {
 			mMusicListener.onPlay();
 		}
@@ -126,7 +106,7 @@ public class MusicManager {
 
 
 	// 缓存到本地
-	private void startCache(final Song song, long delay){
+	private void startCache(final Song song, long delay) {
 		/*ThreadPoolManager.getInstance().addTask(new DownloadTask(song, delay) {
 			@Override
 			protected void onResult(Boolean success) {
@@ -138,7 +118,7 @@ public class MusicManager {
 	}
 
 	// 预缓存下一首
-	public void nextCache(){
+	public void nextCache() {
 		/*Song next = getNextSong();
 		if (next != null) {
 			if (DownloadTask.isTaskRunning(next.id)) {  // 正在缓存
@@ -155,7 +135,7 @@ public class MusicManager {
 		play(currentIndex);
 	}
 
-	public void play(int index){
+	public void play(int index) {
 		if (SongList.sSongList.size() > 0) {
 			currentIndex = index;
 			currentSong = SongList.sSongList.get(currentIndex);
@@ -165,7 +145,7 @@ public class MusicManager {
 		}
 	}
 
-	public void pause(){
+	public void pause() {
 		if (mPlayer != null && mPlayer.isPlaying()) {
 			pauseOrPlay();
 		}
@@ -173,7 +153,7 @@ public class MusicManager {
 
 	public boolean pauseOrPlay() {
 		final boolean isPlaying;
-		if (mPlayer ==null) {
+		if (mPlayer == null) {
 			isPlaying = true;
 			play();
 		} else {
@@ -186,14 +166,13 @@ public class MusicManager {
 					mMusicListener.onPlay();
 				} else {
 					mMusicListener.onPause();
-					isPausedByUser = true;
 				}
 			}
 
 			// 渐强减弱
 			final long duration = isPlaying ? 1200 : 1000;
 			long interval = duration / 10;
-			new CountDownTimer(duration, interval){
+			new CountDownTimer(duration, interval) {
 				@Override
 				public void onTick(long millisUntilFinished) {
 					float volume;
@@ -205,9 +184,10 @@ public class MusicManager {
 					mPlayer.setVolume(volume, volume);
 					//Log.d(TAG, "volume:" + volume);
 				}
+
 				@Override
 				public void onFinish() {
-					if(!isPlaying) {
+					if (!isPlaying) {
 						mPlayer.pause();
 					}
 					mPlayer.setVolume(1f, 1f);
@@ -219,7 +199,7 @@ public class MusicManager {
 	}
 
 	public void stop() {
-		if (mPlayer !=null) {
+		if (mPlayer != null) {
 			mPlayer.reset();
 			mPlayer.release();
 			mPlayer = null;
@@ -232,7 +212,7 @@ public class MusicManager {
 	}
 
 
-	public int getCurrentIndex(){
+	public int getCurrentIndex() {
 		return currentIndex;
 	}
 
@@ -246,7 +226,7 @@ public class MusicManager {
 	public void prev() {
 		if (SongList.sSongList.size() > 0) {
 			currentIndex--;
-			if (currentIndex < 0){
+			if (currentIndex < 0) {
 				currentIndex = SongList.sSongList.size() - 1;
 			}
 
@@ -257,7 +237,7 @@ public class MusicManager {
 	public void next() {
 		if (SongList.sSongList.size() > 0) {
 			currentIndex++;
-			if (currentIndex >= SongList.sSongList.size()){
+			if (currentIndex >= SongList.sSongList.size()) {
 				currentIndex = 0;
 			}
 
@@ -278,20 +258,23 @@ public class MusicManager {
 		return next;
 	}
 
-	public MediaPlayer getPlayer(){
+	public MediaPlayer getPlayer() {
 		return mPlayer;
 	}
 
-	public boolean isPlaying(){
+	public boolean isPlaying() {
 		return mPlayer != null && mPlayer.isPlaying();
 	}
 
 	private MusicListener mMusicListener;
+
 	public void setMusicListener(MusicListener listener) {
 		this.mMusicListener = listener;
 	}
-	public interface MusicListener{
+
+	public interface MusicListener {
 		void onPlay();
+
 		void onPause();
 	}
 

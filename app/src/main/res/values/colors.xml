@@ -10,6 +10,6 @@
 
 	<color name="textTitle">#000000</color>
 	<color name="textDesc">#333333</color>
-	<color name="textGray">#666666</color>
+	<color name="textGray">#999999</color>
 
 </resources>

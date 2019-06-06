@@ -3,25 +3,48 @@
 	android:id="@+id/item_content"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:padding="12dp"
-	android:background="@drawable/bg_item_list_selector">
+	android:background="@drawable/bg_item_list_selector"
+	android:paddingBottom="8dp"
+	android:paddingTop="8dp">
 
 	<TextView
 		android:id="@+id/item_index"
-		android:layout_width="50dp"
+		android:layout_width="32dp"
 		android:layout_height="wrap_content"
-		android:gravity="center_horizontal"
+		android:gravity="right"
+		android:maxLines="1"
 		android:textColor="@color/textGray"
 		android:textSize="12sp"
+		app:layout_constraintBaseline_toBaselineOf="@+id/item_name"
 		app:layout_constraintLeft_toLeftOf="parent"/>
 
 	<TextView
 		android:id="@+id/item_name"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		app:layout_constraintLeft_toRightOf="@+id/item_index"
+		android:layout_marginLeft="12dp"
+		android:layout_marginRight="12dp"
+		android:ellipsize="end"
+		android:maxLines="1"
 		android:textColor="@color/textTitle"
-		android:textSize="14sp"/>
+		android:textSize="14sp"
+		app:layout_constraintLeft_toRightOf="@+id/item_index"
+		app:layout_constraintTop_toTopOf="parent"/>
+
+	<TextView
+		android:id="@+id/item_artist"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginRight="12dp"
+		android:ellipsize="end"
+		android:maxLines="1"
+		android:textColor="@color/textGray"
+		android:textSize="12sp"
+		android:layout_marginTop="2dp"
+		app:layout_constraintStart_toStartOf="@+id/item_name"
+		app:layout_constraintTop_toBottomOf="@+id/item_name"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

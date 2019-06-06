@@ -60,6 +60,8 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
 		TextView mTextIndex;
 		@BindView(R.id.item_name)
 		TextView mTextName;
+		@BindView(R.id.item_artist)
+		TextView mTextArtist;
 
 		public ViewHolder(View itemView) {
 			super(itemView);
@@ -68,9 +70,10 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
 
 		public void update(int position) {
 			Song song = mSongs.get(position);
-			this.mTextIndex.setText("" + (position + 1));
-			this.mTextName.setText(song.name);
-			this.mItemView.setTag(position);
+			mTextIndex.setText("" + (position + 1));
+			mTextName.setText(song.name);
+			mTextArtist.setText(song.artist);
+			mItemView.setTag(position);
 		}
 
 		// 给 button1设置一个点击事件
