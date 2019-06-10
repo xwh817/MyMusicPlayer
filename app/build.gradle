@@ -40,4 +40,6 @@ dependencies {
     implementation project(path: ':viewlib')
 
 
+    // leakcanary2.0 alpha版本，之前的版本为1.6
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-2'
 }

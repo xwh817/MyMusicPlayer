@@ -18,8 +18,7 @@ import xwh.player.music.adapter.HomeViewPagerAdapter;
 import xwh.player.music.fragment.RecommendFragment;
 import xwh.player.music.fragment.SongListFragment;
 
-public class MainActivity extends AppCompatActivity {
-	private Unbinder mUnbinder;
+public class MainActivity extends BaseActivity {
 	@BindView(R.id.viewPager)
 	ViewPager mViewPager;
 	@BindView(R.id.tabLayout)
@@ -38,10 +37,13 @@ public class MainActivity extends AppCompatActivity {
 			R.drawable.tab_history};
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected boolean setContentView() {
 		setContentView(R.layout.activity_main);
-		mUnbinder = ButterKnife.bind(this);
+		return true;
+	}
+
+	@Override
+	protected void initView() {
 		initViewPager();
 		initTabLayout();
 	}
@@ -72,10 +74,4 @@ public class MainActivity extends AppCompatActivity {
 
 	}
 
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		mUnbinder.unbind();
-	}
 }
