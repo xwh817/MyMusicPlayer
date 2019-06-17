@@ -1,19 +1,14 @@
 package xwh.player.music;
 
-import android.os.Bundle;
-
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayout.Tab;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import xwh.player.music.adapter.HomeViewPagerAdapter;
 import xwh.player.music.fragment.RecommendFragment;
 import xwh.player.music.fragment.SongListFragment;

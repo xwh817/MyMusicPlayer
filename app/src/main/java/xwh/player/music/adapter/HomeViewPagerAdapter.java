@@ -1,10 +1,15 @@
 package xwh.player.music.adapter;
 
+import android.util.Log;
+import android.view.ViewGroup;
+
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import xwh.player.music.fragment.RecommendFragment;
 
 /**
  * Created by xwh on 2019/6/3.
@@ -20,7 +25,8 @@ public class HomeViewPagerAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public Fragment getItem(int position) {
-		return mFragments.get(position);
+		Log.d("Fragment", "HomeViewPagerAdapter getItem " + position);
+		return new RecommendFragment();
 	}
 
 	@Override
@@ -28,5 +34,14 @@ public class HomeViewPagerAdapter extends FragmentPagerAdapter {
 		return mFragments.size();
 	}
 
+	@Override
+	public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+		//super.destroyItem(container, position, object);
+		Log.d("Fragment", "HomeViewPagerAdapter destroyItem " + position);
+		/**
+		 * 这里不使用父类的detach((Fragment)object);
+		 * 我们自己已经对数据进行缓存了。
+		 */
 
+	}
 }
