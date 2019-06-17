@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import xwh.player.music.fragment.RecommendFragment;
 
 /**
  * Created by xwh on 2019/6/3.
@@ -26,7 +25,7 @@ public class HomeViewPagerAdapter extends FragmentPagerAdapter {
 	@Override
 	public Fragment getItem(int position) {
 		Log.d("Fragment", "HomeViewPagerAdapter getItem " + position);
-		return new RecommendFragment();
+		return mFragments.get(position);
 	}
 
 	@Override

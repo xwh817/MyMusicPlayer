@@ -24,7 +24,7 @@ import xwh.player.music.adapter.SongListAdapter;
  */
 public class SongListFragment extends BaseFragment {
 
-	@BindView(R.id.recyclerView)
+	//@BindView(R.id.recyclerView)
 	RecyclerView mRecyclerView;
 
 	private SongListAdapter mAdapter;
@@ -34,7 +34,8 @@ public class SongListFragment extends BaseFragment {
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		if (mView == null) {
 			mView = inflater.inflate(R.layout.fragment_song_list, null);
-			mUnbinder = ButterKnife.bind(this, mView);
+			//mUnbinder = ButterKnife.bind(this, mView);
+			mRecyclerView = mView.findViewById(R.id.recyclerView);
 			initView();
 		}
 		initData();

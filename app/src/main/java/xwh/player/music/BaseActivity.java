@@ -8,12 +8,13 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public abstract class BaseActivity extends AppCompatActivity {
+    protected BaseActivity mContext;
     private Unbinder mUnbinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mContext = this;
         boolean bindView = setContentView();    // 子页面是否需要ButterKnife绑定
         if (bindView) {
             mUnbinder = ButterKnife.bind(this);
@@ -41,5 +42,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (mUnbinder != null) {
             mUnbinder.unbind();
         }
+        mContext = null;
     }
 }
