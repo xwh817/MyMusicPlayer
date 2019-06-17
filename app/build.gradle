@@ -39,7 +39,9 @@ dependencies {
     implementation project(path: ':musiclib')
     implementation project(path: ':viewlib')
 
-
     // leakcanary2.0 alpha版本，之前的版本为1.6
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-2'
+
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 }
