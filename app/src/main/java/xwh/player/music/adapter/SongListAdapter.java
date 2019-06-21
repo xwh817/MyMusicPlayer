@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -15,8 +14,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xwh.lib.music.entity.Song;
-import xwh.lib.music.player.MusicManager;
 import xwh.lib.music.player.SongList;
+import xwh.player.music.PlayerActivity;
 import xwh.player.music.R;
 
 /**
@@ -27,7 +26,7 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
 	private List<Song> mSongs;
 
 	public SongListAdapter(Context context) {
-		mContext = context.getApplicationContext();
+		mContext = context;
 	}
 
 	public void setData(List<Song> list) {
@@ -73,16 +72,15 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
 			mTextIndex.setText("" + (position + 1));
 			mTextName.setText(song.name);
 			mTextArtist.setText(song.artist);
-			mItemView.setTag(position);
 		}
 
 		// 给 button1设置一个点击事件
 		@OnClick(R.id.item_content)
 		public void onItemClick(View item) {
-			int position = (int) item.getTag();
+			//int position = (int) item.getTag();
+			int position = getAdapterPosition();    // viewHolder去获取当前位置
 			Song song = mSongs.get(position);
-			Toast.makeText(mContext, song.toString(), Toast.LENGTH_SHORT).show();
-			MusicManager.getInstance().play(position);
+			mContext.startActivity(PlayerActivity.obtainIntent(mContext, song));
 		}
 
 	}

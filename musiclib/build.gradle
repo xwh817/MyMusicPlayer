@@ -34,4 +34,6 @@ dependencies {
     implementation rootProject.ext.retrofit.scalarConverter
     implementation rootProject.ext.retrofit.rxjavaAdapter
 
+    implementation rootProject.ext.dependencies.eventbus
+
 }

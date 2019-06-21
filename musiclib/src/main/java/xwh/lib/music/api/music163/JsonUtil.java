@@ -23,6 +23,18 @@ public class JsonUtil {
 			if (song.duration == 0) {
 				song.duration = json.optInt("dt");
 			}
+			JSONObject album = json.optJSONObject("album");
+			if (album == null) {
+				album = json.optJSONObject("al");
+			}
+			if (album != null) {
+				song.album = album.optInt("id");
+				if (album.has("picUrl")){
+					song.cover = album.getString("picUrl");
+				} else {
+					song.cover = album.optString("img1v1Url");
+				}
+			}
 			JSONArray artists = json.optJSONArray("artists");
 			if (artists == null) {
 				artists = json.optJSONArray("ar");

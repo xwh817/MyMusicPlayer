@@ -39,7 +39,8 @@ public class HomeViewPagerAdapter extends FragmentPagerAdapter {
 		Log.d("Fragment", "HomeViewPagerAdapter destroyItem " + position);
 		/**
 		 * 这里不使用父类的detach((Fragment)object);
-		 * 我们自己已经对数据进行缓存了。
+		 * 我们自己已经对数据进行缓存了。不需要释放。
+		 * 不然，LeakCanary会弹出内存泄漏的问题。
 		 */
 
 	}

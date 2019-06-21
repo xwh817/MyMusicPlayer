@@ -1,7 +1,11 @@
 package xwh.player.music;
 
 import android.animation.ArgbEvaluator;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +21,9 @@ import java.util.List;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
+import xwh.lib.music.player.MusicService;
 import xwh.player.music.adapter.HomeViewPagerAdapter;
+import xwh.player.music.constant.TagConstant;
 import xwh.player.music.fragment.RecommendFragment;
 import xwh.player.music.fragment.SongListFragment;
 
@@ -27,7 +33,6 @@ public class MainActivity extends BaseActivity {
 	@BindView(R.id.tabLayout)
 	TabLayout mTabLayout;
 	private HomeViewPagerAdapter mPagerAdapter;
-	private View preTab;
 
 	int[] texts = {
 			R.string.tab_recommend,
@@ -41,9 +46,20 @@ public class MainActivity extends BaseActivity {
 			R.drawable.tab_history};
 
 	@Override
-	protected boolean setContentView() {
-		setContentView(R.layout.activity_main);
-		return true;
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		connectService();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		unbindService(mServiceConnection);
+	}
+
+	@Override
+	protected int getLayoutRes() {
+		return R.layout.activity_main;
 	}
 
 	@Override
@@ -53,9 +69,7 @@ public class MainActivity extends BaseActivity {
 	}
 
 	private void initViewPager() {
-
 		List<Fragment> fragments = new ArrayList<>();
-
 		fragments.add(new RecommendFragment());
 		fragments.add(new SongListFragment());
 		fragments.add(new RecommendFragment());
@@ -124,6 +138,35 @@ public class MainActivity extends BaseActivity {
 				((TextView)child).setTextColor(color);
 			}
 		}
+	}
+
+
+
+	private ServiceConnection mServiceConnection;
+	private MusicService.MusicBinder mMusicBinder;
+
+	private class MusicServiceConnection implements ServiceConnection {
+
+		//服务启动完成后会进入到这个方法
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			//获得service中的MyBinder
+			mMusicBinder = (MusicService.MusicBinder) service;
+			Log.d(TagConstant.MUSIC, "onServiceConnected");
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+
+		}
+	}
+
+	private void connectService() {
+		Intent intent = new Intent(this, MusicService.class);
+		//使用混合的方法开启服务，
+		startService(intent);
+		mServiceConnection = new MusicServiceConnection();
+		bindService(intent, mServiceConnection, BIND_AUTO_CREATE);
 	}
 
 }

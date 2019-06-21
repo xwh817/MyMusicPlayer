@@ -198,6 +198,11 @@ public class MusicManager {
 		return isPlaying;
 	}
 
+	public long getDuration() {
+		Song song = getCurrentSong();
+		return song == null ? 0 : song.duration;
+	}
+
 	public void stop() {
 		if (mPlayer != null) {
 			mPlayer.reset();

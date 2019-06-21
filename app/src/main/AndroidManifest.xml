@@ -28,6 +28,12 @@
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
+		<activity android:name=".PlayerActivity"/>
+
+		<service android:name="xwh.lib.music.player.MusicService"
+			android:exported="true"
+			android:enabled="true"/>
+
 	</application>
 
 </manifest>
