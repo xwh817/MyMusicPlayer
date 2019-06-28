@@ -38,6 +38,7 @@ dependencies {
     annotationProcessor rootProject.ext.butterknife.compiler
     implementation project(path: ':musiclib')
     implementation project(path: ':viewlib')
+    implementation project(path: ':baselib')
 
     // leakcanary2.0 alpha版本，之前的版本为1.6
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-2'

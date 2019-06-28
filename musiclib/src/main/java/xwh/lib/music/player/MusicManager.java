@@ -1,11 +1,5 @@
 package xwh.lib.music.player;
 
-import android.media.MediaPlayer;
-import android.os.CountDownTimer;
-import android.util.Log;
-
-import java.io.IOException;
-
 import xwh.lib.music.entity.Song;
 
 /**
@@ -13,75 +7,26 @@ import xwh.lib.music.entity.Song;
  */
 public class MusicManager {
 	private static final String TAG = "Music";
-	private static MusicManager instance;
-	private static MediaPlayer mPlayer;
+	private volatile static MusicManager instance;
+	private static MusicPlayer mPlayer;
 	private int currentIndex;
 	private Song currentSong;
 	private int errorCount;
 
 	public static synchronized MusicManager getInstance() {
 		if (instance == null) {
-			instance = new MusicManager();
+			synchronized (MusicManager.class) {
+				if (instance == null) {
+					instance = new MusicManager();
+				}
+			}
 		}
 		return instance;
 	}
 
-	public void start(final String path) {
-		try {
-			if (mPlayer == null) {
-				mPlayer = new MediaPlayer();
-				mPlayer.setOnPreparedListener(mp -> {
-					Log.d(TAG, "onPrepared:" + mp.getDuration());
-					mPlayer.start();
-
-					if (mp.getDuration() > 0 && mp.getDuration() < 60 * 60 * 1000) { // 可能播放失败之后也回调，而且返回一个很大的值1675999624 1676085640
-						errorCount = 0;
-					}
-				});
-				mPlayer.setOnCompletionListener(mp -> {
-						Log.d(TAG, "onCompletion:" + mp.getDuration());
-						// 播放完成后自动下一首
-						if (mp.getDuration() > 0 && mp.getDuration() < 60 * 60 * 1000) { // 可能播放失败之后也回调，而且返回一个很大的值1675999624 1676085640
-							next();
-						}
-				});
-				mPlayer.setOnErrorListener((MediaPlayer mp, int what, int extra) -> {
-						Log.e(TAG, "onError:" + what + ", " + extra + ", " + errorCount);
-						if (what == 1 && extra == -2147483648) {
-							errorCount++;
-							if (errorCount >= 3) { // 未知系统错误。1, -2147483648 MediaPlayer.MEDIA_ERROR_SYSTEM
-								errorCount = 0;
-								//killSelf();
-								return true;
-							}
-							if (!path.startsWith("http")) { // 本地歌曲出错，再重试一遍
-								mp.reset();
-								try {
-									mPlayer.setDataSource(path);
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
-								mPlayer.prepareAsync();
-								return true;
-							}
-						}
-
-						mp.reset();
-						return false;
-				});
-			} else {
-				mPlayer.reset();
-			}
-
-			Log.d(TAG, "start play: " + path);
-
-			mPlayer.setDataSource(path);
-			mPlayer.prepareAsync();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	private MusicManager() {
+		mPlayer = new MusicPlayer();
 	}
-
 
 	public void start(Song song) {
 		currentSong = song;
@@ -97,11 +42,7 @@ public class MusicManager {
 			}
 		}*/
 
-		start(currentSong.url);
-
-		if (mMusicListener != null) {
-			mMusicListener.onPlay();
-		}
+		mPlayer.start(currentSong.url);
 	}
 
 
@@ -146,9 +87,7 @@ public class MusicManager {
 	}
 
 	public void pause() {
-		if (mPlayer != null && mPlayer.isPlaying()) {
-			pauseOrPlay();
-		}
+		mPlayer.pause();
 	}
 
 	public boolean pauseOrPlay() {
@@ -158,41 +97,12 @@ public class MusicManager {
 			play();
 		} else {
 			isPlaying = !mPlayer.isPlaying();
-
-			if (mMusicListener != null) {
-				if (isPlaying) {
-					mPlayer.setVolume(0, 0);
-					mPlayer.start();
-					mMusicListener.onPlay();
-				} else {
-					mMusicListener.onPause();
-				}
+			if (isPlaying) {
+				mPlayer.play();
+			} else {
+				mPlayer.pause();
 			}
 
-			// 渐强减弱
-			final long duration = isPlaying ? 1200 : 1000;
-			long interval = duration / 10;
-			new CountDownTimer(duration, interval) {
-				@Override
-				public void onTick(long millisUntilFinished) {
-					float volume;
-					if (isPlaying) {
-						volume = 1f - millisUntilFinished * 1f / duration;
-					} else {
-						volume = millisUntilFinished * 1f / duration;
-					}
-					mPlayer.setVolume(volume, volume);
-					//Log.d(TAG, "volume:" + volume);
-				}
-
-				@Override
-				public void onFinish() {
-					if (!isPlaying) {
-						mPlayer.pause();
-					}
-					mPlayer.setVolume(1f, 1f);
-				}
-			}.start();
 		}
 
 		return isPlaying;
@@ -203,17 +113,13 @@ public class MusicManager {
 		return song == null ? 0 : song.duration;
 	}
 
-	public void stop() {
-		if (mPlayer != null) {
-			mPlayer.reset();
-			mPlayer.release();
-			mPlayer = null;
+	public long getPosition() {
+		return mPlayer.getPosition();
+	}
 
-			if (mMusicListener != null) {
-				mMusicListener.onPause();
-			}
 
-		}
+	public void release() {
+		mPlayer.release();
 	}
 
 
@@ -263,24 +169,18 @@ public class MusicManager {
 		return next;
 	}
 
-	public MediaPlayer getPlayer() {
-		return mPlayer;
-	}
 
 	public boolean isPlaying() {
 		return mPlayer != null && mPlayer.isPlaying();
 	}
 
-	private MusicListener mMusicListener;
 
 	public void setMusicListener(MusicListener listener) {
-		this.mMusicListener = listener;
+		mPlayer.setMusicListener(listener);
 	}
 
-	public interface MusicListener {
-		void onPlay();
 
-		void onPause();
+	public void seekTo(int progress) {
+		mPlayer.seekTo(progress);
 	}
-
 }

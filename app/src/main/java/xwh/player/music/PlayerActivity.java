@@ -7,33 +7,58 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 
+import java.util.concurrent.TimeUnit;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import jp.wasabeef.glide.transformations.BlurTransformation;
+import xwh.lib.base.utils.StringUtil;
 import xwh.lib.music.entity.Song;
+import xwh.lib.music.player.MusicListenerAdapter;
 import xwh.lib.music.player.MusicManager;
-import xwh.lib.music.player.MusicManager.MusicListener;
 import xwh.lib.view.StatusBarUtil;
 
 /**
  * Created by xwh on 2019/6/17.
  */
-public class PlayerActivity extends BaseActivity{
+public class PlayerActivity extends BaseActivity {
 
-	@BindView(R.id.player_background) View mBackground;
-	@BindView(R.id.item_image) ImageView mCover;
-	@BindView(R.id.item_name) TextView mTitle;
-	@BindView(R.id.item_artist) TextView mArtist;
+	@BindView(R.id.player_background)
+	View mBackground;
+	@BindView(R.id.item_image)
+	ImageView mCover;
+	@BindView(R.id.item_name)
+	TextView mTitle;
+	@BindView(R.id.item_artist)
+	TextView mArtist;
+	@BindView(R.id.text_position)
+	TextView mTextPosition;
+	@BindView(R.id.text_duration)
+	TextView mTextDuration;
+	@BindView(R.id.seekBar)
+	SeekBar mSeekBar;
+	@BindView(R.id.bt_play)
+	ImageView mBtPlay;
 
+	private MusicManager mPlayer;
 	private Song mSong;
+	private Observable mUpdateTask;
+	private Disposable mDisposable;
+	private Consumer mUpdateConsumer;
 
 	@Override
 	protected int getLayoutRes() {
@@ -50,17 +75,32 @@ public class PlayerActivity extends BaseActivity{
 	protected void initView() {
 		StatusBarUtil.setActivityTranslucent(this); // 状态栏透明
 
+		mPlayer = MusicManager.getInstance();
 		mSong = (Song) getIntent().getSerializableExtra("song");
 
-		MusicManager.getInstance().setMusicListener(new MusicListener() {
+		mPlayer.setMusicListener(new MusicListenerAdapter() {
+			@Override
+			public void onPrepared(long duration) {
+				mTextDuration.setText(StringUtil.getTimeFormat(duration));
+				mSeekBar.setMax((int) duration);
+			}
+
 			@Override
 			public void onPlay() {
 				rotateAnim(mCover, 30000);
+				mDisposable = mUpdateTask.subscribe(mUpdateConsumer);
+				mBtPlay.setImageResource(R.drawable.player_pause);
 			}
 
 			@Override
 			public void onPause() {
 				mRotateAnim.pause();
+				if (mDisposable != null) {
+					mDisposable.dispose();
+				}
+				if (mBtPlay != null) {
+					mBtPlay.setImageResource(R.drawable.player_play);
+				}
 			}
 		});
 
@@ -88,8 +128,35 @@ public class PlayerActivity extends BaseActivity{
 
 		mTitle.setText(mSong.name);
 		mArtist.setText(mSong.artist);
-		MusicManager.getInstance().start(mSong);
+		mPlayer.start(mSong);
 
+		mUpdateTask = Observable.interval(1L, TimeUnit.SECONDS, AndroidSchedulers.mainThread());
+		mUpdateConsumer = time -> {
+			long position = mPlayer.getPosition();
+			mTextPosition.setText(StringUtil.getTimeFormat(position));
+			mSeekBar.setProgress((int) position);
+		};
+
+		mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			int progress;
+
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				this.progress = progress;
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+
+			}
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				mPlayer.seekTo(progress);
+			}
+		});
+
+		mBtPlay.setOnClickListener(v -> mPlayer.pauseOrPlay());
 	}
 
 
@@ -107,13 +174,18 @@ public class PlayerActivity extends BaseActivity{
 		}
 	}
 
-	@OnClick(R.id.item_image) void play() {
-		MusicManager.getInstance().pauseOrPlay();
+	@OnClick(R.id.item_image)
+	void play() {
+		mPlayer.pauseOrPlay();
 	}
 
 	@Override
-	protected void onStop() {
-		super.onStop();
-		MusicManager.getInstance().stop();
+	protected void onDestroy() {
+		if (mPlayer.isPlaying()) {
+			mPlayer.pause();
+		}
+
+		super.onDestroy();  // ButterKnife unbind时会把之前注入的对象置空。所以要放在后面。
+		mPlayer.setMusicListener(null);
 	}
 }
