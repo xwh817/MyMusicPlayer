@@ -6,33 +6,36 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xwh.lib.music.entity.Song;
-import xwh.lib.music.player.SongList;
 import xwh.player.music.PlayerActivity;
 import xwh.player.music.R;
 
 /**
- * Created by xwh on 2019/6/4.
+ * Created by xwh on 2019/6/30.
  */
-public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHolder> {
+public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.ViewHolder> {
 	private Context mContext;
 	private List<Song> mSongs;
 
-	public SongListAdapter(Context context) {
+	public HistoryListAdapter(Context context) {
 		mContext = context;
 	}
 
 	public void setData(List<Song> list) {
 		mSongs = list;
-		SongList.sSongList = list;
 		notifyDataSetChanged();
+	}
+
+	public List<Song> getData() {
+		return mSongs;
 	}
 
 	@NonNull

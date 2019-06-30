@@ -17,22 +17,22 @@ public class JsonUtil {
 	public static Song getSongFromJson(JSONObject json) {
 		Song song = new Song();
 		try {
-			song.id = json.getInt("id");
-			song.name = json.getString("name");
-			song.duration = json.optInt("duration");
-			if (song.duration == 0) {
-				song.duration = json.optInt("dt");
+			song.setId(json.getInt("id"));
+			song.setName(json.getString("name"));
+			song.setDuration(json.optInt("duration"));
+			if (song.getDuration() == 0) {
+				song.setDuration(json.optInt("dt"));
 			}
 			JSONObject album = json.optJSONObject("album");
 			if (album == null) {
 				album = json.optJSONObject("al");
 			}
 			if (album != null) {
-				song.album = album.optInt("id");
+				song.setAlbum(album.optInt("id"));
 				if (album.has("picUrl")){
-					song.cover = album.getString("picUrl");
+					song.setCover(album.getString("picUrl"));
 				} else {
-					song.cover = album.optString("img1v1Url");
+					song.setCover(album.optString("img1v1Url"));
 				}
 			}
 			JSONArray artists = json.optJSONArray("artists");
@@ -45,9 +45,9 @@ public class JsonUtil {
 					JSONObject aJson = artists.getJSONObject(i);
 					names.append(aJson.optString("name", "")).append(" ");
 				}
-				song.artist = names.toString();
+				song.setArtist(names.toString());
 			}
-			song.url = "https://music.163.com/song/media/outer/url?id=" + song.id + ".mp3 ";
+			song.setUrl("https://music.163.com/song/media/outer/url?id=" + song.getId() + ".mp3 ");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -66,7 +66,7 @@ public class JsonUtil {
 			JSONArray array = json.getJSONObject("playlist").getJSONArray("tracks");
 			for (int i = 0; i < array.length(); i++) {
 				Song song = getSongFromJson(array.getJSONObject(i));
-				if (song.id > 0) {
+				if (song.getId() > 0) {
 					list.add(song);
 				}
 			}

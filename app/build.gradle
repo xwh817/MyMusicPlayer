@@ -48,4 +48,7 @@ dependencies {
     implementation 'jp.wasabeef:glide-transformations:4.0.1'
 
     implementation rootProject.ext.dependencies.eventbus
+
+
 }
+

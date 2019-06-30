@@ -126,15 +126,17 @@ public class PlayerActivity extends BaseActivity {
 					}
 				});
 
-		mTitle.setText(mSong.name);
-		mArtist.setText(mSong.artist);
+		mTitle.setText(mSong.getName());
+		mArtist.setText(mSong.getArtist());
 		mPlayer.start(mSong);
 
 		mUpdateTask = Observable.interval(1L, TimeUnit.SECONDS, AndroidSchedulers.mainThread());
 		mUpdateConsumer = time -> {
-			long position = mPlayer.getPosition();
-			mTextPosition.setText(StringUtil.getTimeFormat(position));
-			mSeekBar.setProgress((int) position);
+			if (mTextPosition != null) {
+				long position = mPlayer.getPosition();
+				mTextPosition.setText(StringUtil.getTimeFormat(position));
+				mSeekBar.setProgress((int) position);
+			}
 		};
 
 		mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {

@@ -1,5 +1,12 @@
 package xwh.player.music.fragment;
 
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,19 +16,22 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import xwh.lib.music.api.music163.SongAPI;
+import xwh.lib.music.dao.HistoryDao;
+import xwh.lib.music.entity.Song;
 import xwh.lib.music.event.HistoryEvent;
 import xwh.player.music.R;
+import xwh.player.music.adapter.HistoryListAdapter;
 import xwh.player.music.adapter.SongListAdapter;
 
 /**
- * Created by xwh on 2019/6/3.
+ * Created by xwh on 2019/6/30.
  */
-public class SongListFragment extends BaseFragment {
+public class HistoryListFragment extends BaseFragment {
 
 	@BindView(R.id.recyclerView)
 	RecyclerView mRecyclerView;
 
-	private SongListAdapter mAdapter;
+	private HistoryListAdapter mAdapter;
 
 	@Override
 	protected int getLayoutRes() {
@@ -29,7 +39,7 @@ public class SongListFragment extends BaseFragment {
 	}
 
 	protected void initView(){
-		mAdapter = new SongListAdapter(mContext);
+		mAdapter = new HistoryListAdapter(mContext);
 		mRecyclerView.setAdapter(mAdapter);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 		mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
@@ -37,7 +47,18 @@ public class SongListFragment extends BaseFragment {
 	}
 
 	private void initData() {
-		SongAPI.getInstance().getTopList(0, songs -> mAdapter.setData(songs));
+		mAdapter.setData(HistoryDao.getAll());
 	}
+
+	@Override
+	protected boolean isEventBusEnable() {
+		return true;
+	}
+
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void update(Song song) {
+		mAdapter.setData(HistoryDao.getAll());
+	}
+
 
 }

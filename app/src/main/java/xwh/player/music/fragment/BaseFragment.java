@@ -10,8 +10,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import xwh.player.music.constant.Tags;
 
 /**
  * Created by xwh on 2019/6/4.
@@ -27,12 +31,20 @@ public abstract class BaseFragment extends Fragment {
 	public void onAttach(Context context) {
 		super.onAttach(context);
 		this.mContext = context;
+		Log.d(Tags.FRAGMENT, "onAttach: " + this.hashCode());
 	}
 
 	@Override
 	public void onDetach() {
 		super.onDetach();
 		this.mContext = null;
+		Log.d(Tags.FRAGMENT, "onDetach: " + this.hashCode());
+	}
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Log.d(Tags.FRAGMENT, "onCreate: " + this.hashCode());
 	}
 
 	@Nullable
@@ -43,13 +55,22 @@ public abstract class BaseFragment extends Fragment {
 			mUnbinder = ButterKnife.bind(this, mView);
 			initView();
 		}
-		Log.d("Fragment", "onCreateView: " + mView.hashCode());
+
+		if (isEventBusEnable()) {
+			EventBus.getDefault().register(this);
+		}
+
+		Log.d(Tags.FRAGMENT, "onCreateView: " + this.hashCode());
 		return mView;
 	}
 
 	protected abstract int getLayoutRes();
 
 	protected abstract void initView();
+
+	protected boolean isEventBusEnable(){
+		return false;
+	}
 
 	@Override
 	public void onDestroyView() {
@@ -58,6 +79,11 @@ public abstract class BaseFragment extends Fragment {
 			mUnbinder.unbind();
 			mUnbinder = null;
 		}
-		Log.d("Fragment", "onDestroyView: " + mView.hashCode());
+
+		if (isEventBusEnable()) {
+			EventBus.getDefault().register(this);
+		}
+
+		Log.d(Tags.FRAGMENT, "onDestroyView: " + this.hashCode());
 	}
 }

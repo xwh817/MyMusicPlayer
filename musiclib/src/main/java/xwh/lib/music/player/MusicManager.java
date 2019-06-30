@@ -1,5 +1,6 @@
 package xwh.lib.music.player;
 
+import xwh.lib.music.dao.HistoryDao;
 import xwh.lib.music.entity.Song;
 
 /**
@@ -42,7 +43,9 @@ public class MusicManager {
 			}
 		}*/
 
-		mPlayer.start(currentSong.url);
+		mPlayer.start(currentSong.getUrl());
+
+		HistoryDao.add(currentSong);
 	}
 
 
@@ -110,7 +113,7 @@ public class MusicManager {
 
 	public long getDuration() {
 		Song song = getCurrentSong();
-		return song == null ? 0 : song.duration;
+		return song == null ? 0 : song.getDuration();
 	}
 
 	public long getPosition() {

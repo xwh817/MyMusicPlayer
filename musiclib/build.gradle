@@ -1,5 +1,17 @@
 apply plugin: 'com.android.library'
 
+apply plugin: 'org.greenrobot.greendao' // apply plugin
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.greenrobot:greendao-gradle-plugin:3.2.2'
+    }
+}
+
+
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
 
@@ -21,6 +33,15 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+
+    greendao {
+        schemaVersion 1 //数据库版本号
+        /*daoPackage 'xwh.music.greend'
+        // 设置DaoMaster、DaoSession、Dao 包名
+        targetGenDir 'src.main.java'//设置DaoMaster、DaoSession、Dao目录,请注意，这里路径用.不要用/
+        generateTests false //设置为true以自动生成单元测试。
+        targetGenDirTests 'src/main/java' //应存储生成的单元测试的基本目录。默认为 src / androidTest / java。*/
+    }
 }
 
 dependencies {
@@ -35,5 +56,8 @@ dependencies {
     implementation rootProject.ext.retrofit.rxjavaAdapter
 
     implementation rootProject.ext.dependencies.eventbus
+
+    // greenDao
+    implementation 'org.greenrobot:greendao:3.2.2'
 
 }

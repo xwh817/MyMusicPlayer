@@ -23,7 +23,8 @@ import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import xwh.lib.music.player.MusicService;
 import xwh.player.music.adapter.HomeViewPagerAdapter;
-import xwh.player.music.constant.TagConstant;
+import xwh.player.music.constant.Tags;
+import xwh.player.music.fragment.HistoryListFragment;
 import xwh.player.music.fragment.RecommendFragment;
 import xwh.player.music.fragment.SongListFragment;
 
@@ -73,7 +74,7 @@ public class MainActivity extends BaseActivity {
 		fragments.add(new RecommendFragment());
 		fragments.add(new SongListFragment());
 		fragments.add(new RecommendFragment());
-		fragments.add(new RecommendFragment());
+		fragments.add(new HistoryListFragment());
 
 		mPagerAdapter = new HomeViewPagerAdapter(getSupportFragmentManager(), fragments);
 		mViewPager.setAdapter(mPagerAdapter);
@@ -152,7 +153,7 @@ public class MainActivity extends BaseActivity {
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			//获得service中的MyBinder
 			mMusicBinder = (MusicService.MusicBinder) service;
-			Log.d(TagConstant.MUSIC, "onServiceConnected");
+			Log.d(Tags.MUSIC, "onServiceConnected");
 		}
 
 		@Override
