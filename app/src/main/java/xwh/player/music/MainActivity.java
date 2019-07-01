@@ -18,6 +18,7 @@ import com.google.android.material.tabs.TabLayout.Tab;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
@@ -34,6 +35,11 @@ public class MainActivity extends BaseActivity {
 	@BindView(R.id.tabLayout)
 	TabLayout mTabLayout;
 	private HomeViewPagerAdapter mPagerAdapter;
+
+	private int colorSelected;
+	private int colorUnSelected;
+
+	private static final int DEFAULT_INDEX = 0;	// 默认选中的页面index
 
 	int[] texts = {
 			R.string.tab_recommend,
@@ -65,6 +71,8 @@ public class MainActivity extends BaseActivity {
 
 	@Override
 	protected void initView() {
+		colorSelected = ContextCompat.getColor(this, R.color.colorSelected);
+		colorUnSelected = ContextCompat.getColor(this, R.color.colorUnSelected);
 		initViewPager();
 		initTabLayout();
 	}
@@ -81,36 +89,44 @@ public class MainActivity extends BaseActivity {
 
 		mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			private ArgbEvaluator evaluator;
-			private int colorSelected = mContext.getResources().getColor(R.color.colorSelected);
-			private int colorUnSelected = mContext.getResources().getColor(R.color.colorUnSelected);
+			private boolean isDragging = false;
 			@Override
 			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 				Log.d("ViewPager", position + "," + positionOffset + ", " + positionOffsetPixels);
 
-				if (evaluator == null) {
-					evaluator = new ArgbEvaluator();
-				}
+				// 如果是拖动状态，才去处理滑动渐变效果
+				if (isDragging) {
+					if (evaluator == null) {
+						evaluator = new ArgbEvaluator();
+					}
 
-				ViewGroup leftTab = mTabLayout.getTabAt(position).view;
-				int colorLeft = (Integer) evaluator.evaluate(positionOffset, colorSelected, colorUnSelected);
-				changeTabColor(leftTab, colorLeft);
+					Tab leftTab = mTabLayout.getTabAt(position);
+					int colorLeft = (Integer) evaluator.evaluate(positionOffset, colorSelected, colorUnSelected);
+					setTabColor(leftTab, colorLeft);
 
-				if (position + 1 < mTabLayout.getTabCount()) {
-					ViewGroup rightTab = mTabLayout.getTabAt(position + 1).view;
-					int colorRight = (Integer) evaluator.evaluate(positionOffset, colorUnSelected, colorSelected);
-					changeTabColor(rightTab, colorRight);
+					if (position + 1 < mTabLayout.getTabCount()) {
+						Tab rightTab = mTabLayout.getTabAt(position + 1);
+						int colorRight = (Integer) evaluator.evaluate(positionOffset, colorUnSelected, colorSelected);
+						setTabColor(rightTab, colorRight);
+					}
 				}
 
 			}
 
 			@Override
 			public void onPageSelected(int position) {
-
+				Log.d("ViewPager", "onPageSelected: " + position);
 			}
 
 			@Override
 			public void onPageScrollStateChanged(int state) {
+				if (state == ViewPager.SCROLL_STATE_DRAGGING) {
+					isDragging = true;
+				} else if (isDragging && state == ViewPager.SCROLL_STATE_IDLE) {
+					isDragging = false;
+				}
 
+				Log.d("ViewPager", "onPageScrollStateChanged: " + state);
 			}
 		});
 	}
@@ -118,21 +134,49 @@ public class MainActivity extends BaseActivity {
 	private void initTabLayout() {
 		mTabLayout.setTabMode(TabLayout.MODE_FIXED);
 		mTabLayout.setupWithViewPager(mViewPager);      // 关联ViewPager
-		mTabLayout.setTabIconTint(mTabLayout.getTabTextColors());   // 图标和文字颜色一致
+		//mTabLayout.setTabIconTint(mTabLayout.getTabTextColors());   // 图标和文字颜色一致
 		for (int i = 0; i < texts.length; i++) {
 			Tab tab = mTabLayout.getTabAt(i);
 			tab.setText(texts[i]).setIcon(icons[i]);     // 不要自己去newTab了，绑定ViewPager之后会自动生成。
-			//Tab tab = mTabLayout.newTab().setText(texts[i]).setIcon(icons[i]);
-			//mTabLayout.addTab(tab);
+
+			// 初始颜色
+			setTabColor(tab, i==DEFAULT_INDEX ? colorSelected : colorUnSelected);
 		}
+
+		mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+			@Override
+			public void onTabSelected(Tab tab) {
+				setTabColor(tab, colorSelected);
+			}
+
+			@Override
+			public void onTabUnselected(Tab tab) {
+				setTabColor(tab, colorUnSelected);
+			}
+
+			@Override
+			public void onTabReselected(Tab tab) {
+
+			}
+		});
 
 	}
 
-	private void changeTabColor(ViewGroup parent, int color) {
+
+	private void setTabColor(Tab tab, int color) {
+		this.setViewGroupColor(tab.view, color);
+	}
+
+	/**
+	 * 设置Tab颜色，这里使用了递归去寻找ViewGroup下面的TextView和ImageView，去修改其颜色。
+	 * @param parent
+	 * @param color
+	 */
+	private void setViewGroupColor(ViewGroup parent, int color) {
 		for(int i=0; i<parent.getChildCount(); i++) {
 			View child = parent.getChildAt(i);
 			if (child instanceof ViewGroup) {
-				changeTabColor((ViewGroup)child, color);
+				setViewGroupColor((ViewGroup)child, color);
 			} else if(child instanceof ImageView) {
 				((ImageView)child).setColorFilter(color);
 			} else if(child instanceof TextView) {

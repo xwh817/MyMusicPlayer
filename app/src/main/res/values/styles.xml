@@ -11,9 +11,9 @@
 	<style name="TabLayoutStyle" parent="Base.Widget.Design.TabLayout">
 		<item name="tabBackground">@color/colorTab</item>
 		<item name="tabIndicatorColor">@color/colorSelected</item>
-		<item name="tabIndicatorHeight">1dp</item>
+		<item name="tabIndicatorHeight">1dp</item><!-- textColor交给代码去处理
 		<item name="tabSelectedTextColor">@color/colorSelected</item>
-		<item name="tabTextColor">@color/colorUnSelected</item>
+		<item name="tabTextColor">@color/colorUnSelected</item>-->
 		<item name="tabTextAppearance">@style/TabLayoutTextStyle</item>
 	</style>
 	<style name="TabLayoutTextStyle">
