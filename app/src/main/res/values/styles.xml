@@ -16,8 +16,28 @@
 		<item name="tabTextColor">@color/colorUnSelected</item>-->
 		<item name="tabTextAppearance">@style/TabLayoutTextStyle</item>
 	</style>
+
 	<style name="TabLayoutTextStyle">
 		<item name="android:textSize">12sp</item>
+	</style>
+
+	<!--解决冷启动时的白屏问题，避免闪烁，如果延时很长，就不是根本解决方法，要做启动优化了。-->
+	<style name="AppTheme.Launcher">
+		<item name="android:windowFullscreen">true</item>
+		<item name="android:windowDisablePreview">true</item>
+		<item name="android:windowBackground">@android:color/transparent</item>
+	</style>
+
+	<style name="FullscreenTheme" parent="AppTheme">
+		<item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+		<item name="android:windowActionBarOverlay">true</item>
+		<item name="android:windowBackground">@null</item>
+		<item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+		<item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+	</style>
+
+	<style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+		<item name="android:background">@color/black_overlay</item>
 	</style>
 
 </resources>

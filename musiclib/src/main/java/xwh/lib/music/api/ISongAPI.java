@@ -11,4 +11,12 @@ public interface ISongAPI {
 
 	@GET("top/list")
 	Observable<String> getTopList(@Query("idx") int listId);
+
+	@GET("top/playlist/highquality")
+	Observable<String> getAllPlayList();
+
+	@GET("/playlist/detail")
+	Observable<String> getPlayListDetail(@Query("id") int playListId);
+
+
 }

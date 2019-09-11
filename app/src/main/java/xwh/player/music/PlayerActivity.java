@@ -30,7 +30,6 @@ import xwh.lib.base.utils.StringUtil;
 import xwh.lib.music.entity.Song;
 import xwh.lib.music.player.MusicListenerAdapter;
 import xwh.lib.music.player.MusicManager;
-import xwh.lib.view.StatusBarUtil;
 
 /**
  * Created by xwh on 2019/6/17.
@@ -73,7 +72,7 @@ public class PlayerActivity extends BaseActivity {
 
 	@Override
 	protected void initView() {
-		StatusBarUtil.setActivityTranslucent(this); // 状态栏透明
+		//StatusBarUtil.setActivityTranslucent(this); // 状态栏透明
 
 		mPlayer = MusicManager.getInstance();
 		mSong = (Song) getIntent().getSerializableExtra("song");
@@ -184,7 +183,7 @@ public class PlayerActivity extends BaseActivity {
 	@Override
 	protected void onDestroy() {
 		if (mPlayer.isPlaying()) {
-			mPlayer.pause();
+			mPlayer.release();
 		}
 
 		super.onDestroy();  // ButterKnife unbind时会把之前注入的对象置空。所以要放在后面。

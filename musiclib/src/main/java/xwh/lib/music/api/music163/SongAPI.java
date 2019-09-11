@@ -9,6 +9,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import xwh.lib.music.api.ISongAPI;
+import xwh.lib.music.entity.PlayList;
 import xwh.lib.music.entity.Song;
 
 /**
@@ -20,6 +21,7 @@ public class SongAPI {
 	private Retrofit mRetrofit;
 
 	private static SongAPI mInstance;
+	private ISongAPI mISongAPI;
 
 	public static SongAPI getInstance() {
 		if (mInstance == null) {
@@ -42,6 +44,7 @@ public class SongAPI {
 				.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
 				.addConverterFactory(ScalarsConverterFactory.create())
 				.build();
+		mISongAPI = mRetrofit.create(ISongAPI.class);
 	}
 
 	public void getTopList(int listId, Consumer<List<Song>> consumer) {
@@ -49,6 +52,34 @@ public class SongAPI {
 				.getTopList(listId)
 				.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
 				.map(str -> JsonUtil.getSongListFromJson(str))
+				.subscribe(
+						consumer,
+						throwable -> {
+							consumer.accept(null);
+							throwable.printStackTrace();
+						});
+	}
+
+	public void getPlayList(Consumer<List<PlayList>> consumer) {
+		mRetrofit.create(ISongAPI.class)
+				.getAllPlayList()
+				.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+				.map(str -> PlayList.getAllPlayList(str))
+				.subscribe(
+						consumer,
+						throwable -> {
+							consumer.accept(null);
+							throwable.printStackTrace();
+						});
+	}
+
+
+	public void getPlayListDetail(PlayList playList, Consumer<PlayList> consumer) {
+		mRetrofit.create(ISongAPI.class)
+				.getPlayListDetail(playList.getId())
+				.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+				.map(str -> JsonUtil.getSongListFromJson(str))
+				.map(songs -> { playList.setSongs(songs);return playList;})
 				.subscribe(
 						consumer,
 						throwable -> {

@@ -6,5 +6,9 @@
 	<string name="tab_love">收藏</string>
 	<string name="tab_history">历史</string>
 
+	<string name="title_activity_splash">SplashActivity</string>
+	<string name="dummy_button">Dummy Button</string>
+	<string name="dummy_content">DUMMY\nCONTENT</string>
+
 
 </resources>

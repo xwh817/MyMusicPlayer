@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xwh.lib.view.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/item_content"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+	<ImageView
+		android:id="@+id/item_image"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:scaleType="centerCrop"
+		android:src="@drawable/music"/>
+
+	<TextView
+		android:id="@+id/item_name"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignStart="@+id/item_image"
+		android:layout_alignEnd="@+id/item_image"
+		android:layout_alignBottom="@+id/item_image"
+		android:padding="8dp"
+		android:text="@string/app_name"
+		android:textSize="12sp"
+		android:textColor="#fff"
+		android:background="#33000000"
+		android:maxLines="2"
+		android:ellipsize="end"/>
+</xwh.lib.view.SquareRelativeLayout>

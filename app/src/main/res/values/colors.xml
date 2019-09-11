@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="colorPrimary">#ffffff</color>
-	<color name="colorPrimaryDark">#ffffff</color>
+	<color name="colorPrimary">#78C257</color>
+	<color name="colorPrimaryDark">#3e6745</color>
 	<color name="colorAccent">#D81B60</color>
 	<color name="colorSelected">#78C257</color>
 	<color name="colorUnSelected">#ffffff</color>
@@ -10,8 +10,10 @@
 
 	<color name="textDesc">#333333</color>
 	<color name="textGray">#999999</color>
-	
+
 	<color name="player_txt_color">#cccccc</color>
+
+	<color name="black_overlay">#66000000</color>
 
 
 </resources>

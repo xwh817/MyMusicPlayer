@@ -26,6 +26,7 @@ import xwh.lib.music.player.MusicService;
 import xwh.player.music.adapter.HomeViewPagerAdapter;
 import xwh.player.music.constant.Tags;
 import xwh.player.music.fragment.HistoryListFragment;
+import xwh.player.music.fragment.PlayListFragment;
 import xwh.player.music.fragment.RecommendFragment;
 import xwh.player.music.fragment.SongListFragment;
 
@@ -79,7 +80,7 @@ public class MainActivity extends BaseActivity {
 
 	private void initViewPager() {
 		List<Fragment> fragments = new ArrayList<>();
-		fragments.add(new RecommendFragment());
+		fragments.add(new PlayListFragment());
 		fragments.add(new SongListFragment());
 		fragments.add(new RecommendFragment());
 		fragments.add(new HistoryListFragment());
