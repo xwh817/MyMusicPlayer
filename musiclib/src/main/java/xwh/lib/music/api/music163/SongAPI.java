@@ -48,8 +48,7 @@ public class SongAPI {
 	}
 
 	public void getTopList(int listId, Consumer<List<Song>> consumer) {
-		mRetrofit.create(ISongAPI.class)
-				.getTopList(listId)
+		mISongAPI.getTopList(listId)
 				.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
 				.map(str -> JsonUtil.getSongListFromJson(str))
 				.subscribe(
@@ -61,8 +60,7 @@ public class SongAPI {
 	}
 
 	public void getPlayList(Consumer<List<PlayList>> consumer) {
-		mRetrofit.create(ISongAPI.class)
-				.getAllPlayList()
+		mISongAPI.getAllPlayList()
 				.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
 				.map(str -> PlayList.getAllPlayList(str))
 				.subscribe(
@@ -75,8 +73,7 @@ public class SongAPI {
 
 
 	public void getPlayListDetail(PlayList playList, Consumer<PlayList> consumer) {
-		mRetrofit.create(ISongAPI.class)
-				.getPlayListDetail(playList.getId())
+		mISongAPI.getPlayListDetail(playList.getId())
 				.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
 				.map(str -> JsonUtil.getSongListFromJson(str))
 				.map(songs -> { playList.setSongs(songs);return playList;})
