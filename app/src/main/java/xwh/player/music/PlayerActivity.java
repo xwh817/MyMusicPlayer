@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
@@ -27,6 +28,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import xwh.lib.base.utils.StringUtil;
+import xwh.lib.music.api.music163.SongAPI;
 import xwh.lib.music.entity.Song;
 import xwh.lib.music.player.MusicListenerAdapter;
 import xwh.lib.music.player.MusicManager;
@@ -103,27 +105,16 @@ public class PlayerActivity extends BaseActivity {
 			}
 		});
 
-		/*RequestOptions options = new RequestOptions().circleCrop();*/
-		Glide.with(this)
-				.load(mSong.getCover(300))
-				.circleCrop()
-				.transform()
-				.into(mCover);
-
-		Glide.with(this)
-				.load(mSong.getCover(300))
-				.transform(new BlurTransformation(40, 2))// 两个参数 radius高斯模糊半径，sampling图片缩放多少倍之后再进行模糊处理。
-				.into(new CustomTarget<Drawable>() {
-					@Override
-					public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-						mBackground.setBackground(resource);
-					}
-
-					@Override
-					public void onLoadCleared(@Nullable Drawable placeholder) {
-
-					}
-				});
+		if (TextUtils.isEmpty(mSong.getCover())) {
+			SongAPI.getInstance().getSongDetail(mSong.getId()+"", songs -> {
+				if (songs.size() > 0) {
+					mSong.setCover(songs.get(0).getCover());
+					initCover();
+				}
+			});
+		} else {
+			initCover();
+		}
 
 		mTitle.setText(mSong.getName());
 		mArtist.setText(mSong.getArtist());
@@ -158,6 +149,31 @@ public class PlayerActivity extends BaseActivity {
 		});
 
 		mBtPlay.setOnClickListener(v -> mPlayer.pauseOrPlay());
+	}
+
+	private void initCover() {
+
+		/*RequestOptions options = new RequestOptions().circleCrop();*/
+		Glide.with(this)
+				.load(mSong.getCover(300))
+				.circleCrop()
+				.transform()
+				.into(mCover);
+
+		Glide.with(this)
+				.load(mSong.getCover(300))
+				.transform(new BlurTransformation(40, 2))// 两个参数 radius高斯模糊半径，sampling图片缩放多少倍之后再进行模糊处理。
+				.into(new CustomTarget<Drawable>() {
+					@Override
+					public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+						mBackground.setBackground(resource);
+					}
+
+					@Override
+					public void onLoadCleared(@Nullable Drawable placeholder) {
+
+					}
+				});
 	}
 
 

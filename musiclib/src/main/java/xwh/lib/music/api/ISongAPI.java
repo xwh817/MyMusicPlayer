@@ -18,5 +18,11 @@ public interface ISongAPI {
 	@GET("/playlist/detail")
 	Observable<String> getPlayListDetail(@Query("id") int playListId);
 
+	@GET("/search")
+	Observable<String> search(@Query("keywords") String keywords);
+
+	@GET("/song/detail")
+	Observable<String> getSongDetail(@Query("ids") String ids);
+
 
 }

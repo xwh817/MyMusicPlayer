@@ -150,7 +150,13 @@ public class MusicPlayer {
 	}
 
 	public boolean isPlaying() {
-		return mPlayer != null && mPlayer.isPlaying();
+		boolean isPlaying = false;
+		try {
+			isPlaying = mPlayer != null && mPlayer.isPlaying();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return isPlaying;
 	}
 
 	public long getPosition() {

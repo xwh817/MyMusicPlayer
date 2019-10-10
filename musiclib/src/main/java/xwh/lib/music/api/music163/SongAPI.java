@@ -84,4 +84,29 @@ public class SongAPI {
 							throwable.printStackTrace();
 						});
 	}
+
+	public void search(String keywords, Consumer<List<Song>> consumer) {
+		mISongAPI.search(keywords)
+				.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+				.map(str -> JsonUtil.getSongListFromSearchResult(str))
+				.subscribe(
+						consumer,
+						throwable -> {
+							consumer.accept(null);
+							throwable.printStackTrace();
+						});
+	}
+
+	public void getSongDetail(String ids, Consumer<List<Song>> consumer) {
+		mISongAPI.getSongDetail(ids)
+				.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+				.map(str -> JsonUtil.getSongListFromDetail(str))
+				.subscribe(
+						consumer,
+						throwable -> {
+							consumer.accept(null);
+							throwable.printStackTrace();
+						});
+	}
+
 }

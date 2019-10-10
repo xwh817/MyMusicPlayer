@@ -27,7 +27,7 @@ import xwh.player.music.adapter.HomeViewPagerAdapter;
 import xwh.player.music.constant.Tags;
 import xwh.player.music.fragment.HistoryListFragment;
 import xwh.player.music.fragment.PlayListFragment;
-import xwh.player.music.fragment.RecommendFragment;
+import xwh.player.music.fragment.SearchFragment;
 import xwh.player.music.fragment.SongListFragment;
 
 public class MainActivity extends BaseActivity {
@@ -45,12 +45,12 @@ public class MainActivity extends BaseActivity {
 	int[] texts = {
 			R.string.tab_recommend,
 			R.string.tab_song_list,
-			R.string.tab_love,
+			R.string.tab_search,
 			R.string.tab_history};
 	int[] icons = {
 			R.drawable.tab_recommend,
 			R.drawable.tab_list,
-			R.drawable.tab_love,
+			R.drawable.tab_search,
 			R.drawable.tab_history};
 
 	@Override
@@ -82,7 +82,7 @@ public class MainActivity extends BaseActivity {
 		List<Fragment> fragments = new ArrayList<>();
 		fragments.add(new PlayListFragment());
 		fragments.add(new SongListFragment());
-		fragments.add(new RecommendFragment());
+		fragments.add(new SearchFragment());
 		fragments.add(new HistoryListFragment());
 
 		mPagerAdapter = new HomeViewPagerAdapter(getSupportFragmentManager(), fragments);

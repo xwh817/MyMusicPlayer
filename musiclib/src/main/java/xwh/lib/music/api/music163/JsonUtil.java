@@ -61,13 +61,46 @@ public class JsonUtil {
 	}
 
 	public static List<Song> getSongListFromJson(JSONObject json) {
+		JSONArray array = null;
+		try {
+			array = json.getJSONObject("playlist").getJSONArray("tracks");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return getSongListFromJsonArray(array);
+	}
+
+	public static List<Song> getSongListFromSearchResult(String str) {
+		JSONArray array = null;
+		try {
+			JSONObject json = new JSONObject(str);
+			array = json.getJSONObject("result").getJSONArray("songs");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return getSongListFromJsonArray(array);
+	}
+
+	public static List<Song> getSongListFromDetail(String str) {
+		JSONArray array = null;
+		try {
+			JSONObject json = new JSONObject(str);
+			array = json.getJSONArray("songs");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return getSongListFromJsonArray(array);
+	}
+
+	public static List<Song> getSongListFromJsonArray(JSONArray array) {
 		List<Song> list = new ArrayList<>();
 		try {
-			JSONArray array = json.getJSONObject("playlist").getJSONArray("tracks");
-			for (int i = 0; i < array.length(); i++) {
-				Song song = getSongFromJson(array.getJSONObject(i));
-				if (song.getId() > 0) {
-					list.add(song);
+			if (array != null) {
+				for (int i = 0; i < array.length(); i++) {
+					Song song = getSongFromJson(array.getJSONObject(i));
+					if (song.getId() > 0) {
+						list.add(song);
+					}
 				}
 			}
 		} catch (JSONException e) {
@@ -75,5 +108,6 @@ public class JsonUtil {
 		}
 		return list;
 	}
+
 
 }
