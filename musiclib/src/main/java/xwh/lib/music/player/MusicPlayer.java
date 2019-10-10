@@ -171,7 +171,6 @@ public class MusicPlayer {
 		if (mPlayer != null) {
 			mPlayer.reset();
 			mPlayer.release();
-			//mPlayer = null;
 			mListener = null;
 		}
 	}
