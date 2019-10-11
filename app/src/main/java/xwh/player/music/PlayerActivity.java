@@ -60,6 +60,7 @@ public class PlayerActivity extends BaseActivity {
 	private Observable mUpdateTask;
 	private Disposable mDisposable;
 	private Consumer mUpdateConsumer;
+	private Disposable mLoadingDisposable;
 
 	@Override
 	protected int getLayoutRes() {
@@ -106,7 +107,7 @@ public class PlayerActivity extends BaseActivity {
 		});
 
 		if (TextUtils.isEmpty(mSong.getCover())) {
-			SongAPI.getInstance().getSongDetail(mSong.getId()+"", songs -> {
+			mLoadingDisposable = SongAPI.getInstance().getSongDetail(mSong.getId()+"", songs -> {
 				if (songs.size() > 0) {
 					mSong.setCover(songs.get(0).getCover());
 					initCover();
@@ -120,6 +121,7 @@ public class PlayerActivity extends BaseActivity {
 		mArtist.setText(mSong.getArtist());
 		mPlayer.start(mSong);
 
+		// 使用RxJava开启循环任务
 		mUpdateTask = Observable.interval(1L, TimeUnit.SECONDS, AndroidSchedulers.mainThread());
 		mUpdateConsumer = time -> {
 			if (mTextPosition != null) {
@@ -200,6 +202,14 @@ public class PlayerActivity extends BaseActivity {
 	protected void onDestroy() {
 		if (mPlayer.isPlaying()) {
 			mPlayer.release();
+		}
+
+		// 防止内存泄漏，在退出的时候停止异步任务或定时循环任务。
+		if (mLoadingDisposable != null) {
+			mLoadingDisposable.dispose();
+		}
+		if (mDisposable != null) {
+			mDisposable.dispose();
 		}
 
 		super.onDestroy();  // ButterKnife unbind时会把之前注入的对象置空。所以要放在后面。

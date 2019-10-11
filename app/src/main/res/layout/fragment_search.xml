@@ -5,16 +5,30 @@
 	android:padding="@dimen/page_padding"
 	android:orientation="vertical">
 
-	<EditText
-		android:id="@+id/search_input"
+	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:imeOptions="actionSearch"
-		android:inputType="text"
-		android:maxLines="1"
-		android:textSize="@dimen/input_size"
-		android:hint="@string/hint_search"
-		android:text="" />
+		android:orientation="horizontal">
+
+		<EditText
+			android:id="@+id/search_input"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:imeOptions="actionSearch"
+			android:inputType="text"
+			android:maxLines="1"
+			android:textSize="@dimen/input_size"
+			android:hint="@string/hint_search"
+			android:text="" />
+
+		<ImageView
+			android:id="@+id/bt_search"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:padding="8dp"
+			android:src="@drawable/tab_search"/>
+	</LinearLayout>
 
 	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/recyclerView"

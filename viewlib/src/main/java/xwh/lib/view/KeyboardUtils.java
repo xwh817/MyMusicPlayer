@@ -12,4 +12,15 @@ public class KeyboardUtils {
 		InputMethodManager manager = (InputMethodManager) (context.getSystemService(Context.INPUT_METHOD_SERVICE));
 		manager.hideSoftInputFromWindow(editText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 	}
+
+
+	public static void showKeyboard(EditText editText){
+		editText.setFocusable(true);
+		editText.setFocusableInTouchMode(true);
+		editText.requestFocus();
+		InputMethodManager inputManager =
+				(InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputManager.showSoftInput(editText, 0);
+	}
+
 }

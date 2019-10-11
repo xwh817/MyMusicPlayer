@@ -94,7 +94,7 @@ public class MusicManager {
 	}
 
 	public boolean pauseOrPlay() {
-		final boolean isPlaying;
+		boolean isPlaying;
 		if (mPlayer == null) {
 			isPlaying = true;
 			play();

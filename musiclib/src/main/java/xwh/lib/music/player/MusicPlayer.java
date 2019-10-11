@@ -12,11 +12,22 @@ public class MusicPlayer {
 	private static MediaPlayer mPlayer;
 	private int errorCount;
 	private MusicListener mListener;
+	private int mState;
+
+	public static final int STATE_IDEL = 0;
+	public static final int STATE_LOADING = 1;
+	public static final int STATE_PREPARED = 2;
+	public static final int STATE_PLAYING = 3;
+	public static final int STATE_PAUSED= 4;
+	public static final int STATE_COMPLETION = 5;
+	public static final int STATE_ERROR = 6;
 
 	private void init() {
 		mPlayer = new MediaPlayer();
+		mState = STATE_IDEL;
 		mPlayer.setOnPreparedListener(mp -> {
 			Log.d(TAG, "onPrepared:" + mp.getDuration());
+			mState = STATE_PREPARED;
 			play();
 
 			if (mp.getDuration() > 0 && mp.getDuration() < 60 * 60 * 1000) { // 可能播放失败之后也回调，而且返回一个很大的值1675999624 1676085640
@@ -29,6 +40,7 @@ public class MusicPlayer {
 		});
 		mPlayer.setOnCompletionListener(mp -> {
 			Log.d(TAG, "onCompletion:" + mp.getDuration());
+			mState = STATE_COMPLETION;
 			// 播放完成后自动下一首
 			if (mp.getDuration() > 0 && mp.getDuration() < 60 * 60 * 1000) { // 可能播放失败之后也回调，而且返回一个很大的值1675999624 1676085640
 				//next();
@@ -39,6 +51,7 @@ public class MusicPlayer {
 		});
 		mPlayer.setOnErrorListener((MediaPlayer mp, int what, int extra) -> {
 			Log.e(TAG, "onError:" + what + ", " + extra + ", " + errorCount);
+			mState = STATE_ERROR;
 			if (what == 1 && extra == -2147483648) {
 				errorCount++;
 				if (errorCount >= 3) { // 未知系统错误。1, -2147483648 MediaPlayer.MEDIA_ERROR_SYSTEM
@@ -75,6 +88,7 @@ public class MusicPlayer {
 			}
 
 			Log.d(TAG, "start play: " + path);
+			mState = STATE_LOADING;
 
 			mPlayer.setDataSource(path);
 			mPlayer.prepareAsync();
@@ -85,6 +99,7 @@ public class MusicPlayer {
 
 	public void play(){
 		if (mPlayer != null) {
+			mState = STATE_PLAYING;
 			volumeSmoothUp();
 			if (mListener != null) {
 				mListener.onPlay();
@@ -94,6 +109,7 @@ public class MusicPlayer {
 
 	public void pause(){
 		if (mPlayer != null) {
+			mState = STATE_PAUSED;
 			if (mListener != null) {
 				mListener.onPause();
 			}
@@ -171,6 +187,7 @@ public class MusicPlayer {
 		if (mPlayer != null) {
 			mPlayer.reset();
 			mPlayer.release();
+			mPlayer = null;
 			mListener = null;
 		}
 	}

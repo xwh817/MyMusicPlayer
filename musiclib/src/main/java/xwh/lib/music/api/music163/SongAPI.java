@@ -3,6 +3,7 @@ package xwh.lib.music.api.music163;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
@@ -97,8 +98,8 @@ public class SongAPI {
 						});
 	}
 
-	public void getSongDetail(String ids, Consumer<List<Song>> consumer) {
-		mISongAPI.getSongDetail(ids)
+	public Disposable getSongDetail(String ids, Consumer<List<Song>> consumer) {
+		return mISongAPI.getSongDetail(ids)
 				.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
 				.map(str -> JsonUtil.getSongListFromDetail(str))
 				.subscribe(
