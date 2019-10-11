@@ -80,8 +80,8 @@ public class MainActivity extends BaseActivity {
 
 	private void initViewPager() {
 		List<Fragment> fragments = new ArrayList<>();
-		fragments.add(new PlayListFragment());
 		fragments.add(new SongListFragment());
+		fragments.add(new PlayListFragment());
 		fragments.add(new SearchFragment());
 		fragments.add(new HistoryListFragment());
 

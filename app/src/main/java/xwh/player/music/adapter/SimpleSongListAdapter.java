@@ -21,11 +21,11 @@ import xwh.player.music.R;
 /**
  * Created by xwh on 2019/6/30.
  */
-public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.ViewHolder> {
+public class SimpleSongListAdapter extends RecyclerView.Adapter<SimpleSongListAdapter.ViewHolder> {
 	private Context mContext;
 	private List<Song> mSongs;
 
-	public HistoryListAdapter(Context context) {
+	public SimpleSongListAdapter(Context context) {
 		mContext = context;
 	}
 

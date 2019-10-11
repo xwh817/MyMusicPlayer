@@ -17,7 +17,7 @@ import butterknife.OnEditorAction;
 import xwh.lib.music.api.music163.SongAPI;
 import xwh.lib.view.KeyboardUtils;
 import xwh.player.music.R;
-import xwh.player.music.adapter.SongListAdapter;
+import xwh.player.music.adapter.SimpleSongListAdapter;
 
 /**
  * Created by xwh on 2019/10/10.
@@ -29,7 +29,7 @@ public class SearchFragment extends BaseFragment {
 	@BindView(R.id.recyclerView)
 	RecyclerView mRecyclerView;
 
-	private SongListAdapter mAdapter;
+	private SimpleSongListAdapter mAdapter;
 
 	@Override
 	protected int getLayoutRes() {
@@ -44,7 +44,7 @@ public class SearchFragment extends BaseFragment {
 			}
 			return false;
 		});*/
-		mAdapter = new SongListAdapter(mContext);
+		mAdapter = new SimpleSongListAdapter(mContext);
 		mRecyclerView.setAdapter(mAdapter);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 		mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
@@ -76,9 +76,7 @@ public class SearchFragment extends BaseFragment {
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		super.setUserVisibleHint(isVisibleToUser);
 		if (mView != null) {
-			if (isVisibleToUser) {
-				KeyboardUtils.showKeyboard(mSearchInput);
-			} else {
+			if (!isVisibleToUser) {
 				KeyboardUtils.hideKeyboard(mContext, mSearchInput);
 			}
 		}

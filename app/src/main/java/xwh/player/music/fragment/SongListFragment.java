@@ -1,15 +1,9 @@
 package xwh.player.music.fragment;
 
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import butterknife.BindView;
 import xwh.lib.music.api.music163.SongAPI;
-import xwh.lib.music.event.HistoryEvent;
 import xwh.player.music.R;
 import xwh.player.music.adapter.SongListAdapter;
 
@@ -32,7 +26,7 @@ public class SongListFragment extends BaseFragment {
 		mAdapter = new SongListAdapter(mContext);
 		mRecyclerView.setAdapter(mAdapter);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-		mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
+		//mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
 		initData();
 	}
 

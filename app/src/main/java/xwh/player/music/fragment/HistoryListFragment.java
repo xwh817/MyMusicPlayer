@@ -1,13 +1,7 @@
 package xwh.player.music.fragment;
 
-import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,13 +10,10 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
-import xwh.lib.music.api.music163.SongAPI;
 import xwh.lib.music.dao.HistoryDao;
 import xwh.lib.music.entity.Song;
-import xwh.lib.music.event.HistoryEvent;
 import xwh.player.music.R;
-import xwh.player.music.adapter.HistoryListAdapter;
-import xwh.player.music.adapter.SongListAdapter;
+import xwh.player.music.adapter.SimpleSongListAdapter;
 import xwh.player.music.constant.Tags;
 
 /**
@@ -33,7 +24,7 @@ public class HistoryListFragment extends BaseFragment {
 	@BindView(R.id.recyclerView)
 	RecyclerView mRecyclerView;
 
-	private HistoryListAdapter mAdapter;
+	private SimpleSongListAdapter mAdapter;
 	private boolean needRefresh = true;
 
 	@Override
@@ -42,7 +33,7 @@ public class HistoryListFragment extends BaseFragment {
 	}
 
 	protected void initView(){
-		mAdapter = new HistoryListAdapter(mContext);
+		mAdapter = new SimpleSongListAdapter(mContext);
 		mRecyclerView.setAdapter(mAdapter);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 		mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));

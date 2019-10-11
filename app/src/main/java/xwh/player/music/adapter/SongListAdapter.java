@@ -1,10 +1,15 @@
 package xwh.player.music.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
@@ -13,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import xwh.lib.music.entity.Song;
 import xwh.lib.music.player.SongList;
 import xwh.player.music.PlayerActivity;
@@ -38,7 +44,7 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
 	@NonNull
 	@Override
 	public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		return new ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.layout_song_item, parent, false));
+		return new ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.layout_song_image_item, parent, false));
 	}
 
 	@Override
@@ -52,8 +58,8 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
 	}
 
 	public class ViewHolder extends RecyclerView.ViewHolder {
-		@BindView(R.id.item_index)
-		TextView mTextIndex;
+		@BindView(R.id.item_image)
+		ImageView mImage;
 		@BindView(R.id.item_name)
 		TextView mTextName;
 		@BindView(R.id.item_artist)
@@ -66,9 +72,15 @@ public class SongListAdapter extends RecyclerView.Adapter<SongListAdapter.ViewHo
 
 		public void update(int position) {
 			Song song = mSongs.get(position);
-			mTextIndex.setText("" + (position + 1));
+			//mTextIndex.setText("" + (position + 1));
 			mTextName.setText(song.getName());
 			mTextArtist.setText(song.getArtist());
+			if (!TextUtils.isEmpty(song.getCover())) {
+				Glide.with(mContext).load(song.getCover(100))
+						.apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(16,8)))
+						.into(mImage);
+			}
+
 		}
 
 		// 给 button1设置一个点击事件
