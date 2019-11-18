@@ -8,6 +8,10 @@ android {
         targetSdkVersion rootProject.ext.android.targetSdkVersion
         versionCode rootProject.ext.android.versionCode
         versionName rootProject.ext.android.versionName
+        ndk {
+            // 设置支持的SO库架构
+            abiFilters 'armeabi' //, 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
     }
     buildTypes {
         release {
@@ -42,6 +46,7 @@ dependencies {
     implementation project(path: ':musiclib')
     implementation project(path: ':viewlib')
     implementation project(path: ':baselib')
+    implementation project(path: ':baidu_speech')
 
     // leakcanary2.0 alpha版本，之前的版本为1.6
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-alpha-2'

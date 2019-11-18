@@ -15,6 +15,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
 import xwh.lib.music.api.music163.SongAPI;
+import xwh.lib.speech.OnlineAsrManager;
 import xwh.lib.view.KeyboardUtils;
 import xwh.player.music.R;
 import xwh.player.music.adapter.SimpleSongListAdapter;
@@ -30,6 +31,7 @@ public class SearchFragment extends BaseFragment {
 	RecyclerView mRecyclerView;
 
 	private SimpleSongListAdapter mAdapter;
+	private OnlineAsrManager mAsrManager;
 
 	@Override
 	protected int getLayoutRes() {
@@ -48,6 +50,18 @@ public class SearchFragment extends BaseFragment {
 		mRecyclerView.setAdapter(mAdapter);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 		mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
+
+		initSpeech();
+	}
+
+	private void initSpeech() {
+		mAsrManager = OnlineAsrManager.getInstance();
+		mAsrManager.initPermission(getActivity());
+		mAsrManager.initListener(mContext);
+		mAsrManager.setOnSpeechResult(text -> {
+			mSearchInput.setText(text);
+			onSearch();
+		});
 	}
 
 	private void onSearch(){
@@ -72,6 +86,12 @@ public class SearchFragment extends BaseFragment {
 		return false;
 	}
 
+
+	@OnClick(R.id.bt_speech)
+	void onSpeechClick(View bt) {
+		mAsrManager.start();
+	}
+
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		super.setUserVisibleHint(isVisibleToUser);
@@ -81,4 +101,6 @@ public class SearchFragment extends BaseFragment {
 			}
 		}
 	}
+
+
 }

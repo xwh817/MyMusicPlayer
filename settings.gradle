@@ -1,1 +1,1 @@
-include ':app', ':musiclib', ':viewlib', ':baselib'
+include ':app', ':musiclib', ':viewlib', ':baselib', ':baidu_speech'
