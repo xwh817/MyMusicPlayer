@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:padding="@dimen/page_padding"
@@ -39,9 +40,49 @@
 			android:src="@drawable/micphone"/>
 	</LinearLayout>
 
-	<androidx.recyclerview.widget.RecyclerView
-		android:id="@+id/recyclerView"
+	<FrameLayout
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"/>
+		android:layout_height="match_parent"
+		android:clipChildren="false">
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/recyclerView"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"/>
+
+		<FrameLayout
+			android:id="@+id/ll_tab_speech"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="bottom|center_horizontal"
+			android:clipChildren="false">
+			<xwh.lib.view.WaveView
+				android:id="@+id/waveView"
+				android:layout_width="160dp"
+				android:layout_height="160dp"
+				android:layout_marginBottom="-30dp"
+				android:visibility="invisible"
+				app:wave_color="#99cccccc"
+				app:wave_init_radius="40dp"
+				app:wave_item_margin="16dp"
+				app:wave_speed="2dp"/>
+			<ImageView
+				android:id="@+id/image_tab_speech"
+				android:layout_width="60dp"
+				android:layout_height="60dp"
+				android:layout_gravity="bottom|center_horizontal"
+				android:layout_marginBottom="12dp"
+				android:scaleType="fitCenter"
+				android:src="@drawable/ic_tab_speech" />
+
+			<xwh.lib.view.RecordingAnimView
+				android:id="@+id/recordingAnimView"
+				android:layout_width="40dp"
+				android:layout_height="40dp"
+				android:layout_gravity="bottom|center_horizontal"
+				android:layout_marginBottom="30dp"
+				android:visibility="invisible" />
+
+		</FrameLayout>
+	</FrameLayout>
 
 </LinearLayout>

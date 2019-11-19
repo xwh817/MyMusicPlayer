@@ -3,4 +3,16 @@
 	<declare-styleable name="ImageViewWithAspectRatio">
 		<attr name="ratio" format="float"/>
 	</declare-styleable>
+
+	<declare-styleable name="WaveView">
+		<!--圆颜色-->
+		<attr name="wave_color" format="color"/>
+		<!--中心圆图片半径-->
+		<attr name="wave_init_radius" format="dimension"/>
+		<!--波浪圆之间间距,值越小越窄-->
+		<attr name="wave_item_margin" format="dimension"/>
+		<!--波浪速度，每帧距离-->
+		<attr name="wave_speed" format="dimension"/>
+	</declare-styleable>
+
 </resources>

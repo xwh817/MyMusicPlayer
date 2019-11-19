@@ -7,6 +7,7 @@
 	<string name="tab_history">历史</string>
 	<string name="tab_search">搜索</string>
 	<string name="hint_search">输入歌手名或歌名搜索</string>
+	<string name="speech_start">按住开始说话</string>
 
 	<string name="title_activity_splash">SplashActivity</string>
 	<string name="dummy_button">Dummy Button</string>
